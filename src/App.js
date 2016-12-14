@@ -9,6 +9,11 @@ import _ from 'lodash';
 let numFetch = 0;
 
 	function doFetch(next_url){
+		if(AppStore.stop ===true){
+			AppStore.setStatus('');
+			console.log('停止');
+			return;
+		}
 		numFetch++;
 		console.log('●第', numFetch, '次呼叫doFetch...')
 
@@ -19,6 +24,13 @@ let numFetch = 0;
 			console.log('看到', json.data.length, '筆資料')
 
 			for(let i = 0; i< json.data.length ;i++){
+
+				if(AppStore.stop ===true){
+					AppStore.setStatus('');
+					console.log('停止');
+					return;
+				}
+
 				if(json.data[i].hasOwnProperty('message')){
 					let post = json.data[i]
 					AppStore.addToPost_list(post);
@@ -62,8 +74,16 @@ class App extends Component {
 		this.handleBeginDateChange = this.handleBeginDateChange.bind(this);
 		this.handleEndDateChange = this.handleEndDateChange.bind(this);
 		this.handleKeywordChange = this.handleKeywordChange.bind(this);
+		this.handleStop = this.handleStop.bind(this);
 	}
 
+
+
+
+	handleStop(){
+		AppStore.stop = true;
+
+	}
 	handleBeginDateChange(event){
 		// console.log(event.target.value)
 		AppStore.setBeginDate(event.target.value)
@@ -96,19 +116,22 @@ class App extends Component {
 
 		};
 
-    (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+	    (function(d, s, id){
+	     var js, fjs = d.getElementsByTagName(s)[0];
+	     if (d.getElementById(id)) {return;}
+	     js = d.createElement(s); js.id = id;
+	     js.src = "//connect.facebook.net/en_US/sdk.js";
+	     fjs.parentNode.insertBefore(js, fjs);
+	    }(document, 'script', 'facebook-jssdk'));
 
 	}
 
 
 
 	handleSubmit(){
+		AppStore.stop = false;
+
+
 		numFetch = 0;
 		AppStore.setPost_list([]);
 		AppStore.setFilter_post_list([]);
@@ -117,10 +140,10 @@ class App extends Component {
 
 		let queryStr = `me/posts?limit=600`
 		if(!_.isEmpty(AppStore.begin_date)){
-			queryStr = queryStr + `&since=${AppStore.begin_date}`;
+			queryStr += `&since=${AppStore.begin_date}`;
 		}
 		if(!_.isEmpty(AppStore.end_date)){
-			queryStr = queryStr + `&until=${AppStore.end_date}`;
+			queryStr +=  `&until=${AppStore.end_date}`;
 		}
 
 
@@ -173,6 +196,7 @@ class App extends Component {
 
 
         }else{
+        	alert('尚未登入, 請允許彈跳視窗')
         	console.log('尚未正常登入')
 			AppStore.setStatus('');
         }
@@ -209,6 +233,7 @@ class App extends Component {
       		value={AppStore.keyword}
       		onChange={this.handleKeywordChange}/><br />
       	<button onClick={this.handleSubmit}>列出文章</button>
+      	<button onClick={this.handleStop}>停止</button>
       	<Posts />
       </div>
     );

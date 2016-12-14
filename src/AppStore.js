@@ -10,7 +10,8 @@ let AppStore = observable({
 	filter_post_list: [],
 	non_msg_list: [],
 	keyword: '',
-	status: ''
+	status: '',
+	stop:false
 });
 
 _.assign(AppStore, {
@@ -34,7 +35,7 @@ _.assign(AppStore, {
 		this.post_list.push(val);
 		this.filter_post_list = _.filter(this.post_list, (o)=>{
 			let i = o.message.indexOf(this.keyword);
-			if(i!=-1){
+			if(i!==-1){
 				// console.log('有符合')
 				return true;
 			}else{
