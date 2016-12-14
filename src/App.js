@@ -217,6 +217,7 @@ class App extends Component {
   render() {
     return (
       <div>
+      	<div style={{color:'blue'}}>取得你的Facebook 文章(請允許彈跳視窗以登入)</div>
       	<div>限制條件：(若無輸入，代表不限制)</div>
       	<div style={{color:'red'}}>{AppStore.status}</div>
       	開始日期：<input type='text'
