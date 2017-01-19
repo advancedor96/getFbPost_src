@@ -5,6 +5,8 @@ import AppStore from './AppStore.js'
 import Posts from './Posts.js'
 import mobx from 'mobx';
 import _ from 'lodash';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 let numFetch = 0;
 
@@ -216,25 +218,52 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-      	<div style={{color:'blue'}}>取得你的Facebook 文章(請允許彈跳視窗以登入)</div>
-      	<div>限制條件：(若無輸入，代表不限制)</div>
-      	<div style={{color:'red'}}>{AppStore.status}</div>
-      	開始日期：<input type='text'
+	  <div>
+
+      	<p style={{color:'blue'}}>取得你的Facebook 文章(請允許彈跳視窗以登入)</p>
+      	<p>限制條件：(若無輸入，代表不限制)</p>
+      	<p style={{color:'red'}}>{AppStore.status}</p>
+      	
+		<TextField
+			floatingLabelText="開始日期"
+			hintText="ex: 2016-01-01"
+			floatingLabelFixed={true}
       		value={AppStore.begin_date}
       		onChange={this.handleBeginDateChange}
-      		placeholder='2016-01-01'
-      		/><br />
-      	結束日期：<input type='text'
+		/>
+		<br />
+		<TextField
+			floatingLabelText="結束日期"
+			hintText="ex: 2016-12-31"
+			floatingLabelFixed={true}
       		value={AppStore.end_date}
       		onChange={this.handleEndDateChange}
-      		placeholder='2016-12-31'
-      		/><br />
-      	包含字詞：<input type='text'
+		/>
+
+		<br />
+
+		<TextField
+			floatingLabelText="包含字詞"
+			hintText="ex: 2016-12-31"
+			floatingLabelFixed={true}
       		value={AppStore.keyword}
-      		onChange={this.handleKeywordChange}/><br />
-      	<button onClick={this.handleSubmit}>列出文章</button>
-      	<button onClick={this.handleStop}>停止</button>
+      		onChange={this.handleKeywordChange}
+		/>
+
+
+		<br />
+
+		<RaisedButton 
+			label="列出文章" 
+			primary={true}
+			onClick={this.handleSubmit}
+		/>
+		<RaisedButton 
+			label="停止" 
+			secondary={true}
+			onClick={this.handleStop}
+		/>
+
       	<Posts />
       </div>
     );
