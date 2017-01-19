@@ -1,10 +1,11 @@
 
 import {observable, action} from 'mobx';
 import _ from 'lodash'
+import moment from 'moment';
 
 let AppStore = observable({
-	begin_date : "",
-	end_date: "",
+	begin_date : null,
+	end_date: null,
 	accessToken: '',
 	post_list: [],
 	filter_post_list: [],
@@ -16,11 +17,13 @@ let AppStore = observable({
 
 _.assign(AppStore, {
 	setBeginDate: action(function(val){
-		this.begin_date = val;
+		console.log('val=', val)
+		this.begin_date = val.toDate();
+		// this.begin_date = val;
 	}),
 
 	setEnd_date: action(function(val){
-		this.end_date = val;
+		this.end_date = val.toDate();
 	}),
 
 	setAccessToken: action(function(val){

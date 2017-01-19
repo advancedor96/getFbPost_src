@@ -7,6 +7,8 @@ import mobx from 'mobx';
 import _ from 'lodash';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import DatePicker from 'material-ui/DatePicker';
+import moment from 'moment';
 
 let numFetch = 0;
 
@@ -65,7 +67,21 @@ let numFetch = 0;
 
 	}
 
-
+Date.prototype.Format = function (fmt) {  
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
 
 class App extends Component {
 	constructor(props){
@@ -86,13 +102,21 @@ class App extends Component {
 		AppStore.stop = true;
 
 	}
-	handleBeginDateChange(event){
-		// console.log(event.target.value)
-		AppStore.setBeginDate(event.target.value)
+	handleBeginDateChange(event, date){
+		let moment_date = moment(date);
+		AppStore.setBeginDate(moment_date)
 
+		// let str = moment_date.format("YYYY-MM-DD")
 	}
-	handleEndDateChange(event){
-		AppStore.setEnd_date(event.target.value)
+
+
+
+	handleEndDateChange(event, date){
+		let moment_date = moment(date);
+		AppStore.setEnd_date(moment_date)
+
+		// let str = moment_date.format("YYYY-MM-DD")
+		// console.log('end文字：', str);
 
 	}
 
@@ -223,22 +247,24 @@ class App extends Component {
       	<p style={{color:'blue'}}>取得你的Facebook 文章(請允許彈跳視窗以登入)</p>
       	<p>限制條件：(若無輸入，代表不限制)</p>
       	<p style={{color:'red'}}>{AppStore.status}</p>
-      	
-		<TextField
-			floatingLabelText="開始日期"
-			hintText="ex: 2016-01-01"
-			floatingLabelFixed={true}
+
+    	<DatePicker 
+			hintText="開始日期"
+			autoOk={true}
       		value={AppStore.begin_date}
-      		onChange={this.handleBeginDateChange}
-		/>
-		<br />
-		<TextField
-			floatingLabelText="結束日期"
-			hintText="ex: 2016-12-31"
-			floatingLabelFixed={true}
+			onChange={this.handleBeginDateChange}
+		/>  	
+
+
+    	<DatePicker 
+			hintText="結束日期"
+			autoOk={true}
       		value={AppStore.end_date}
-      		onChange={this.handleEndDateChange}
-		/>
+			onChange={this.handleEndDateChange}
+		/> 
+
+		<br />
+
 
 		<br />
 
